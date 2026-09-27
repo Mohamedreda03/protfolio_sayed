@@ -1,0 +1,173 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+  --font-mono: var(--font-mono);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+}
+
+:root {
+  --background: #fbfbfa;
+  --foreground: #37352f;
+  --card: #ffffff;
+  --card-foreground: #37352f;
+  --border: rgba(55, 53, 47, 0.12);
+  --border-highlight: rgba(217, 115, 13, 0.35);
+  --notion-orange: #d9730d;
+  --notion-orange-hover: #c26207;
+  --notion-orange-bg: #faebdd;
+  --notion-yellow: #dfab01;
+  --notion-yellow-hover: #cb9018;
+  --notion-yellow-bg: #fbf3db;
+  --notion-blue: #0b6e99;
+  --notion-blue-bg: #e7f3f8;
+  --notion-green: #0f7b6c;
+  --notion-green-bg: #eef5f2;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body), sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), sans-serif;
+    letter-spacing: -0.025em;
+    color: #37352f;
+  }
+
+  ::selection {
+    background-color: #faebdd;
+    color: #d9730d;
+  }
+
+  /* Notion-style refined minimalist scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #fbfbfa;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #d3d1cb;
+    border-radius: 9999px;
+    border: 2px solid #fbfbfa;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b8b6b0;
+  }
+}
+
+/* Precision SVG packet flow animations */
+@keyframes conduitFlow {
+  from {
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes reverseConduitFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 40;
+  }
+}
+
+@keyframes telemetrySpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes telemetrySpinReverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes corePulse {
+  0%, 100% {
+    opacity: 0.75;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.animate-conduit {
+  animation: conduitFlow 1.8s linear infinite;
+}
+
+.animate-conduit-fast {
+  animation: conduitFlow 1s linear infinite;
+}
+
+.animate-conduit-reverse {
+  animation: reverseConduitFlow 2.2s linear infinite;
+}
+
+.animate-telemetry-spin {
+  animation: telemetrySpin 24s linear infinite;
+  transform-origin: center;
+}
+
+.animate-telemetry-spin-reverse {
+  animation: telemetrySpinReverse 18s linear infinite;
+  transform-origin: center;
+}
+
+.animate-core-pulse {
+  animation: corePulse 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Notion Card Surface */
+.notion-card {
+  background-color: #ffffff;
+  border: 1px solid rgba(55, 53, 47, 0.12);
+  box-shadow: rgba(15, 15, 15, 0.04) 0px 0px 0px 1px, rgba(15, 15, 15, 0.03) 0px 2px 4px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.notion-card:hover {
+  border-color: rgba(217, 115, 13, 0.45);
+  box-shadow: rgba(15, 15, 15, 0.06) 0px 0px 0px 1px, rgba(217, 115, 13, 0.12) 0px 6px 18px;
+  transform: translateY(-2px);
+}
