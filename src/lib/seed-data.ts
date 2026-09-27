@@ -9,6 +9,11 @@ export const SEED_PROFILE: Profile = {
   logoUrl: "",
   logoText: "MR",
   resumeUrl: "/resume.pdf",
+  heroBadge: "OPEN FOR STAFF / PRINCIPAL DATA ROLES",
+  heroHeadline: "Architecting Distributed Systems.",
+  heroHighlight: "Scaling Real-Time",
+  heroDescription:
+    "Specializing in high-throughput event streaming topologies, Medallion cloud lakehouses, and distributed compute engines operating under strict sub-second SLAs and zero-loss guarantees.",
   socials: {
     github: "https://github.com",
     linkedin: "https://linkedin.com",

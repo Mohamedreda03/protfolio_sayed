@@ -6,19 +6,34 @@ import { HeadingAccent } from "@/components/common/decorative-svgs";
 import { FileDown, ArrowRight } from "lucide-react";
 
 export function GatewayHero({ profile }: { profile: Profile }) {
+  const badge = profile.heroBadge || "OPEN FOR STAFF / PRINCIPAL DATA ROLES";
+  const headline = profile.heroHeadline || "Architecting Distributed Systems.";
+  const highlight = profile.heroHighlight || "Scaling Real-Time Data Pipelines.";
+  const description =
+    profile.heroDescription ||
+    profile.summary ||
+    "Specializing in high-throughput event streaming topologies, Medallion cloud lakehouses, and distributed compute engines operating under strict sub-second SLAs and zero-loss guarantees.";
+
   return (
     <section className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Centered Editorial Headline */}
       <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
         {/* Status Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAAC18]/10 border border-[#D9730D]/20 text-[#D9730D] text-xs font-mono font-bold mb-6">
-          <span className="w-2 h-2 rounded-full bg-[#D9730D] animate-pulse" />
-          <span>OPEN FOR STAFF / PRINCIPAL DATA ROLES</span>
-        </div>
+        {badge && (
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FAAC18]/10 border border-[#D9730D]/20 text-[#D9730D] text-xs font-mono font-bold mb-6">
+            <span className="w-2 h-2 rounded-full bg-[#D9730D] animate-pulse" />
+            <span>{badge}</span>
+          </div>
+        )}
 
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#37352F] leading-[1.08] font-heading">
-          Architecting Distributed Systems. <br />
-          <span className="text-[#D9730D]">Scaling Real-Time</span> Data Pipelines.
+          {headline}
+          {highlight && (
+            <>
+              <br />
+              <span className="text-[#D9730D]">{highlight}</span>
+            </>
+          )}
         </h1>
 
         {/* Dynamic SVG Accent Under Headline */}
@@ -27,9 +42,8 @@ export function GatewayHero({ profile }: { profile: Profile }) {
         </div>
 
         <p className="text-base sm:text-xl text-[#787774] max-w-3xl mx-auto leading-relaxed font-normal">
-          The engineering portfolio of <span className="text-[#37352F] font-bold">{profile.name}</span>.
-          Specializing in high-throughput event streaming topologies, Medallion cloud lakehouses,
-          and distributed compute engines operating under strict sub-second SLAs and zero-loss guarantees.
+          The engineering portfolio of <span className="text-[#37352F] font-bold">{profile.name}</span>.{" "}
+          {description}
         </p>
 
         {/* Action CTAs */}

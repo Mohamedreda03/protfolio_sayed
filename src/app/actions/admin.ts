@@ -4,8 +4,19 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { APPWRITE_CONFIG } from "@/lib/appwrite/config";
 import { createAdminClient, createSessionClient } from "@/lib/appwrite/server";
-import { getShowcaseItems, getInquiries, saveShowcaseItem, getProfile, updateProfile, uploadAssetFile } from "@/lib/appwrite/data";
-import { ShowcaseItem, Inquiry, Profile } from "@/lib/types";
+import {
+  getShowcaseItems,
+  getInquiries,
+  saveShowcaseItem,
+  deleteShowcaseItem,
+  getProfile,
+  updateProfile,
+  uploadAssetFile,
+  getCertifications,
+  saveCertification,
+  deleteCertification,
+} from "@/lib/appwrite/data";
+import { ShowcaseItem, Inquiry, Profile, CertificationItem } from "@/lib/types";
 
 const ADMIN_COOKIE = "portfolio-admin-session";
 
@@ -67,14 +78,16 @@ export async function fetchAdminData(): Promise<{
   showcaseItems: ShowcaseItem[];
   inquiries: Inquiry[];
   profile: Profile;
+  certifications: CertificationItem[];
 }> {
-  const [showcaseItems, inquiries, profile] = await Promise.all([
+  const [showcaseItems, inquiries, profile, certifications] = await Promise.all([
     getShowcaseItems(),
     getInquiries(),
     getProfile(),
+    getCertifications(),
   ]);
 
-  return { showcaseItems, inquiries, profile };
+  return { showcaseItems, inquiries, profile, certifications };
 }
 
 export async function saveShowcaseItemServerAction(
@@ -88,6 +101,48 @@ export async function saveShowcaseItemServerAction(
   } catch (err) {
     console.error("Failed to save showcase item:", err);
     return { success: false, error: "Failed to save project item." };
+  }
+}
+
+export async function deleteShowcaseItemServerAction(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    await deleteShowcaseItem(id);
+    revalidatePath("/");
+    revalidatePath("/admin/dashboard");
+    return { success: true };
+  } catch (err) {
+    console.error("Failed to delete showcase item:", err);
+    return { success: false, error: "Failed to delete project item." };
+  }
+}
+
+export async function saveCertificationServerAction(
+  item: Omit<CertificationItem, "id"> & { id?: string }
+): Promise<{ success: boolean; item?: CertificationItem; error?: string }> {
+  try {
+    const saved = await saveCertification(item);
+    revalidatePath("/");
+    revalidatePath("/admin/dashboard");
+    return { success: true, item: saved };
+  } catch (err) {
+    console.error("Failed to save certification:", err);
+    return { success: false, error: "Failed to save certification." };
+  }
+}
+
+export async function deleteCertificationServerAction(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    await deleteCertification(id);
+    revalidatePath("/");
+    revalidatePath("/admin/dashboard");
+    return { success: true };
+  } catch (err) {
+    console.error("Failed to delete certification:", err);
+    return { success: false, error: "Failed to delete certification." };
   }
 }
 

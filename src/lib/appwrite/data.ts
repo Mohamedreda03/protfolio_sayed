@@ -69,6 +69,10 @@ export async function getProfile(): Promise<Profile> {
         logoUrl: doc.logoUrl ?? memoryProfile.logoUrl,
         logoText: doc.logoText ?? memoryProfile.logoText,
         resumeUrl: doc.resumeUrl || memoryProfile.resumeUrl,
+        heroBadge: doc.heroBadge ?? memoryProfile.heroBadge,
+        heroHeadline: doc.heroHeadline ?? memoryProfile.heroHeadline,
+        heroHighlight: doc.heroHighlight ?? memoryProfile.heroHighlight,
+        heroDescription: doc.heroDescription ?? memoryProfile.heroDescription,
         socials: {
           github: doc.githubUrl || memoryProfile.socials.github,
           linkedin: doc.linkedinUrl || memoryProfile.socials.linkedin,
@@ -121,6 +125,10 @@ export async function updateProfile(data: Partial<Profile>): Promise<Profile> {
     if (data.logoUrl !== undefined) payload.logoUrl = data.logoUrl;
     if (data.logoText !== undefined) payload.logoText = data.logoText;
     if (data.resumeUrl !== undefined) payload.resumeUrl = data.resumeUrl;
+    if (data.heroBadge !== undefined) payload.heroBadge = data.heroBadge;
+    if (data.heroHeadline !== undefined) payload.heroHeadline = data.heroHeadline;
+    if (data.heroHighlight !== undefined) payload.heroHighlight = data.heroHighlight;
+    if (data.heroDescription !== undefined) payload.heroDescription = data.heroDescription;
     if (data.socials?.github !== undefined) payload.githubUrl = data.socials.github;
     if (data.socials?.linkedin !== undefined) payload.linkedinUrl = data.socials.linkedin;
     if (data.socials?.email !== undefined) payload.email = data.socials.email;
@@ -141,6 +149,10 @@ export async function updateProfile(data: Partial<Profile>): Promise<Profile> {
         logoUrl: updated.logoUrl,
         logoText: updated.logoText,
         resumeUrl: updated.resumeUrl,
+        heroBadge: updated.heroBadge,
+        heroHeadline: updated.heroHeadline,
+        heroHighlight: updated.heroHighlight,
+        heroDescription: updated.heroDescription,
         socials: {
           github: updated.githubUrl,
           linkedin: updated.linkedinUrl,
@@ -160,6 +172,10 @@ export async function updateProfile(data: Partial<Profile>): Promise<Profile> {
           logoUrl: data.logoUrl || "",
           logoText: data.logoText || "",
           resumeUrl: data.resumeUrl || "",
+          heroBadge: data.heroBadge || memoryProfile.heroBadge || "",
+          heroHeadline: data.heroHeadline || memoryProfile.heroHeadline || "",
+          heroHighlight: data.heroHighlight || memoryProfile.heroHighlight || "",
+          heroDescription: data.heroDescription || memoryProfile.heroDescription || "",
           githubUrl: data.socials?.github || "",
           linkedinUrl: data.socials?.linkedin || "",
           email: data.socials?.email || "",
@@ -174,6 +190,10 @@ export async function updateProfile(data: Partial<Profile>): Promise<Profile> {
         logoUrl: created.logoUrl,
         logoText: created.logoText,
         resumeUrl: created.resumeUrl,
+        heroBadge: created.heroBadge,
+        heroHeadline: created.heroHeadline,
+        heroHighlight: created.heroHighlight,
+        heroDescription: created.heroDescription,
         socials: {
           github: created.githubUrl,
           linkedin: created.linkedinUrl,
@@ -398,3 +418,108 @@ export async function saveShowcaseItem(item: Omit<ShowcaseItem, "id"> & { id?: s
 
   return fullItem;
 }
+
+export async function deleteShowcaseItem(idOrDocId: string): Promise<boolean> {
+  if (APPWRITE_CONFIG.isConfigured) {
+    try {
+      const { databases } = await createAdminClient();
+      await databases.deleteDocument(
+        APPWRITE_CONFIG.databaseId,
+        APPWRITE_CONFIG.collections.showcaseItems,
+        idOrDocId
+      );
+    } catch (error) {
+      console.warn("Appwrite deleteShowcaseItem error:", error);
+    }
+  }
+
+  memoryShowcaseItems = memoryShowcaseItems.filter(
+    (item) => item.id !== idOrDocId && item.$id !== idOrDocId
+  );
+  return true;
+}
+
+export async function saveCertification(
+  item: Omit<CertificationItem, "id"> & { id?: string }
+): Promise<CertificationItem> {
+  const generatedId = item.id || `cert-${Date.now()}`;
+  const fullItem: CertificationItem = {
+    ...item,
+    id: generatedId,
+  };
+
+  if (APPWRITE_CONFIG.isConfigured) {
+    try {
+      const { databases } = await createAdminClient();
+      const payload = {
+        title: item.title,
+        issuer: item.issuer,
+        issueDate: item.issueDate,
+        credentialId: item.credentialId || "",
+        credentialUrl: item.credentialUrl || "",
+        badgeType: item.badgeType || "aws",
+        skillsCovered: item.skillsCovered || [],
+      };
+
+      if (item.$id) {
+        const doc = await databases.updateDocument(
+          APPWRITE_CONFIG.databaseId,
+          APPWRITE_CONFIG.collections.certifications,
+          item.$id,
+          payload
+        );
+        return {
+          ...fullItem,
+          $id: doc.$id,
+          id: doc.$id,
+        };
+      } else {
+        const doc = await databases.createDocument(
+          APPWRITE_CONFIG.databaseId,
+          APPWRITE_CONFIG.collections.certifications,
+          ID.unique(),
+          payload
+        );
+        return {
+          ...fullItem,
+          $id: doc.$id,
+          id: doc.$id,
+        };
+      }
+    } catch (error) {
+      console.warn("Appwrite saveCertification fallback to memory:", error);
+    }
+  }
+
+  const existingIndex = memoryCertifications.findIndex(
+    (x) => x.id === item.id || (item.$id && x.$id === item.$id)
+  );
+  if (existingIndex >= 0) {
+    memoryCertifications[existingIndex] = fullItem;
+  } else {
+    memoryCertifications.push(fullItem);
+  }
+
+  return fullItem;
+}
+
+export async function deleteCertification(idOrDocId: string): Promise<boolean> {
+  if (APPWRITE_CONFIG.isConfigured) {
+    try {
+      const { databases } = await createAdminClient();
+      await databases.deleteDocument(
+        APPWRITE_CONFIG.databaseId,
+        APPWRITE_CONFIG.collections.certifications,
+        idOrDocId
+      );
+    } catch (error) {
+      console.warn("Appwrite deleteCertification error:", error);
+    }
+  }
+
+  memoryCertifications = memoryCertifications.filter(
+    (c) => c.id !== idOrDocId && c.$id !== idOrDocId
+  );
+  return true;
+}
+

@@ -10,13 +10,14 @@ export default async function AdminDashboardPage() {
     redirect("/admin/login");
   }
 
-  const { showcaseItems, inquiries, profile } = await fetchAdminData();
+  const { showcaseItems, inquiries, profile, certifications } = await fetchAdminData();
 
   return (
     <AdminDashboardClient
       initialItems={showcaseItems}
       initialInquiries={inquiries}
       initialProfile={profile}
+      initialCertifications={certifications}
       isAppwriteConfigured={APPWRITE_CONFIG.isConfigured}
     />
   );

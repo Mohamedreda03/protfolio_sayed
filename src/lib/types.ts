@@ -46,7 +46,7 @@ export interface CertificationItem {
   issueDate: string;
   credentialId?: string;
   credentialUrl?: string;
-  badgeType: "aws" | "databricks" | "confluent" | "kubernetes";
+  badgeType: "aws" | "databricks" | "confluent" | "kubernetes" | "other";
   skillsCovered: string[];
 }
 
@@ -59,6 +59,10 @@ export interface Profile {
   logoUrl?: string;
   logoText?: string;
   resumeUrl: string;
+  heroBadge?: string;
+  heroHeadline?: string;
+  heroHighlight?: string;
+  heroDescription?: string;
   socials: {
     github?: string;
     linkedin?: string;
